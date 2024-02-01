@@ -1,7 +1,13 @@
 cd C:/Users/toufe/Documents/GitHub/data-engineering-zoomcamp/sandbox/2_docker
 
+# download file and unzip 
+wget https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-09.csv.gz -O green_tripdata_2019-09.gz | gzip -d -c green_tripdata_2019-09.gz > green_tripdata_2019-09.csv
+wget https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv
+
+# create a docker network
 docker network create pg_network
 
+# run images in docker network manually
 docker run \
     --name my_postgresDB \
     --network=pg_network \
@@ -11,7 +17,6 @@ docker run \
     -v C:/Users/toufe/Documents/GitHub/data-engineering-zoomcamp/sandbox/2_docker/ny_pg_data:/var/lib/postgresql/data \
     -p 5432:5432 \
     -d postgres:13
-
 
 docker run -p 8080:80 \
   -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
