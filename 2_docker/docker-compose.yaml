@@ -1,0 +1,32 @@
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
+    volumes:
+      - "./ny_pg_data:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8080:80"
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json:ro  # Mount the servers.json file
+  # taxi_ingest:
+  #   image: taxi_ingest:v001
+  #   depends_on:
+  #     - pgdatabase
+  #   environment:
+  #     - POSTGRES_USER=root
+  #     - POSTGRES_PASSWORD=root
+  #     - POSTGRES_HOST=pgdatabase  # Use the service name for internal networking
+  #     - POSTGRES_PORT=5432
+  #     - POSTGRES_DB=ny_taxi
+  #     - TABLE_NAME=green_taxi_trips
+  #     - URL="https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2019-09.parquet"

@@ -1,0 +1,13 @@
+{
+    "Servers": {
+      "1": {
+        "Name": "Postgres Server",  // Customize the name as you wish
+        "Group": "Servers",
+        "Host": "pgdatabase",  // Use the service name from your docker-compose.yaml
+        "Port": 5432,
+        "MaintenanceDB": "ny_taxi",  // Specify your database name
+        "Username": "root",
+        "Password": "root"  // Provide your database credentials
+      }
+    }
+  }

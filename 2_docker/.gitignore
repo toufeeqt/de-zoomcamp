@@ -1,0 +1,3 @@
+*.csv
+*.parquet
+ny_pg_data/*
