@@ -34,11 +34,11 @@ python ingest_data.py \
     --table_name=green_taxi_trips \
     --url="https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2019-09.parquet"
 
-#buid the docker image
+# buid the docker image
 docker build -t taxi_ingest:v001 .
 
-#run the docker image 
-#NB: Entrypoint is to the ingest_data.py
+# run the docker image 
+# NB: Entrypoint is to the ingest_data.py
 docker run -it \
     --network=pg_network \
     taxi_ingest:v001 \
@@ -50,7 +50,7 @@ docker run -it \
         --table_name=green_taxi_trips \
         --url="https://d37ci6vzurychx.cloudfront.net/trip-data/green_tripdata_2019-09.parquet"
 
-#upload the taxi zone file
+# upload the taxi zone file
 docker run -it \
     --network=pg_network \
     taxi_ingest:v001 \
@@ -61,3 +61,21 @@ docker run -it \
         --database=ny_taxi \
         --table_name=taxi_zone \
         --url="https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv"
+
+
+# install terraform on VM
+cd ./bin
+wget https://releases.hashicorp.com/terraform/1.7.2/terraform_1.7.2_linux_amd64.zip
+
+# upload the gcp credentials to VM
+# navigate to folder of gcp credentials
+sftp de-zoomcamp
+mkdir .gc
+cd .gc
+put gcp.json
+
+# Environment variable with credentials
+export GOOGLE_APPLICATION_CREDENTIALS=~/.gc/gcp.json
+
+# activate gcp service account 
+gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
