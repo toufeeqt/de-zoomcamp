@@ -79,3 +79,17 @@ export GOOGLE_APPLICATION_CREDENTIALS=~/.gc/gcp.json
 
 # activate gcp service account 
 gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS
+
+# VM shutdown
+sudo shutdown now
+
+# go to GCP and restart the VM
+# update the ssh config IP host address
+code ~/.ssh/config
+
+```
+Host de-zoomcamp
+    HostName 34.32.144.49
+    User touf
+    IdentityFile ~/.ssh/gcp
+```
