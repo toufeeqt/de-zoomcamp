@@ -8,6 +8,9 @@
 # Refresh service-account's auth-token for this session
 gcloud auth application-default login
 
+#Use the credential file stored into an environment variable
+export GOOGLE_CREDENTIALS="./keys/gcp.json"
+
 # Initialize state file (.tfstate)
 terraform init
 
