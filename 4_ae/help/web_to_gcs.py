@@ -10,11 +10,12 @@ Pre-reqs:
 2. Set GOOGLE_APPLICATION_CREDENTIALS to your project/service-account key
 3. Set GCP_GCS_BUCKET as your bucket or change default value of BUCKET
 """
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] ="C:/Users/toufe/documents/github/de-zoomcamp/gcp.json"
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] ="<YOUR GCP JSON FILE LOCATION>"
+
 # services = ['fhv','green','yellow']
 init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/'
 # switch out the bucketname
-BUCKET = os.environ.get("GCP_GCS_BUCKET", "de-homework-4")
+BUCKET = os.environ.get("GCP_GCS_BUCKET", "<YOUR BUCKET NAME>")
 
 
 def upload_to_gcs(bucket, object_name, local_file):
@@ -49,6 +50,8 @@ def web_to_gcs(year, service):
         print(f"Local: {file_name}")
 
         #define all the datatypes
+        #this was necessary as I was getting field datatype errors when reading in GBQ
+        #this enforces the fields coming in to be a certain datatype
         taxi_dtypes = {
                     'VendorID': pd.Int64Dtype(),
                     'passenger_count': pd.Int64Dtype(),
@@ -73,7 +76,9 @@ def web_to_gcs(year, service):
                     'dispatching_base_num':str,
                     'trip_type':pd.Int64Dtype()
                 }
-        # native date parsing 
+        
+        # native date parsing
+        # depending on which file type comes through I do the date parsing by field name 
         if(service=='green'): 
             parse_dates = ['lpep_pickup_datetime', 'lpep_dropoff_datetime']
         elif(service=='yellow'):
@@ -81,7 +86,8 @@ def web_to_gcs(year, service):
         else:
             parse_dates = ['pickup_datetime','dropOff_datetime']
 
-        # read it back into a parquet file
+        # Read the data into an iterator
+        # splitting the file into chunks helped in the memory management
         df_iter = pd.read_csv(file_name \
                       , sep=',' \
                       , compression='gzip' \
@@ -108,9 +114,11 @@ def web_to_gcs(year, service):
         upload_to_gcs(BUCKET, f"{service}/{file_name}", file_name)
         print(f"GCS: {service}/{file_name}")
 
-
+#-----------------------------------------------------------------------
+# MAIN PROCESSING SECTION
 web_to_gcs('2019', 'green')
 web_to_gcs('2020', 'green')
+
 web_to_gcs('2019', 'fhv')
 
 web_to_gcs('2019', 'yellow')
